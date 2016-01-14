@@ -1,0 +1,33 @@
+LoadModule passenger_module modules/mod_passenger.so
+<IfModule mod_passenger.c>
+   PassengerRoot @PASSENGERROOT@
+</IfModule>
+
+# Before deploying Ruby, you have to install one of the following packages
+# depending on the Ruby version you want to use:
+#
+# - rh-passenger40-ruby193
+#    - Use following PassengerRuby configuration:
+#      PassengerRuby /opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby193
+# - rh-passenger40-ruby200
+#    - Use following PassengerRuby configuration:
+#      PassengerRuby /opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby200
+# - rh-passenger40-ruby22
+#    - Use following PassengerRuby configuration:
+#      PassengerRuby /opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby22
+#
+# Then you can deploy Ruby application like this:
+#
+#    <VirtualHost *:80>
+#       ServerName www.yourhost.com
+#       PassengerRuby /opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby193
+#       # Be sure to point to 'public'!
+#       DocumentRoot /somewhere/public
+#       <Directory /somewhere/public>
+#          # Relax Apache security settings
+#          AllowOverride all
+#          Require all granted
+#          # MultiViews must be turned off
+#          Options -MultiViews
+#       </Directory>
+#    </VirtualHost>

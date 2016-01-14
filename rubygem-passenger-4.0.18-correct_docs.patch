@@ -1,0 +1,26 @@
+diff --git a/build/documentation.rb b/build/documentation.rb
+index ab9a0a0..7e90312 100644
+--- a/build/documentation.rb
++++ b/build/documentation.rb
+@@ -90,7 +90,7 @@ def create_markdown_compilation_task(target)
+ 	end
+ end
+ 
+-create_markdown_compilation_task('doc/Packaging.html')
++#create_markdown_compilation_task('doc/Packaging.html')
+ 
+ desc "Upload documentation to the Phusion web server"
+ task 'doc:rsync' => :doc do
+diff --git a/lib/phusion_passenger/packaging.rb b/lib/phusion_passenger/packaging.rb
+index f31f276..a90cf8d 100644
+--- a/lib/phusion_passenger/packaging.rb
++++ b/lib/phusion_passenger/packaging.rb
+@@ -37,7 +37,7 @@ module Packaging
+ 	# Files that must be generated before packaging.
+ 	PREGENERATED_FILES = [
+ 		'ext/common/Constants.h',
+-		'doc/Packaging.html'
++		'doc/Packaging.txt.md'
+ 	] + ASCII_DOCS
+ 	
+ 	USER_EXECUTABLES = [
