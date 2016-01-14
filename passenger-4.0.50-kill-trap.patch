@@ -1,0 +1,12 @@
+diff --git a/lib/phusion_passenger/ruby_core_enhancements.rb b/lib/phusion_passenger/ruby_core_enhancements.rb
+index 1f2924b..66a81c3 100644
+--- a/lib/phusion_passenger/ruby_core_enhancements.rb
++++ b/lib/phusion_passenger/ruby_core_enhancements.rb
+@@ -162,6 +162,7 @@ module Signal
+ 			result = Signal.list
+ 			result.delete("ALRM")
+ 			result.delete("VTALRM")
++			result.delete("KILL")
+ 		end
+ 		
+ 		# Don't touch SIGCHLD no matter what! On OS X waitpid() will

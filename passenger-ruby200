@@ -1,0 +1,13 @@
+#!/bin/bash
+
+. /opt/rh/rh-passenger40/service-environment
+for sclname in $RH_PASSENGER40_RUBY200_SCLS_ENABLED ; do
+    if [ -f /opt/rh/$sclname/enable ]; then
+        . /opt/rh/$sclname/enable
+        export X_SCLS="$X_SCLS $sclname"
+    fi
+done
+
+export RUBYLIB="/opt/rh/rh-passenger40/root/usr/lib64/passenger200${RUBYLIB:+:${RUBYLIB}}"
+
+ruby "$@"

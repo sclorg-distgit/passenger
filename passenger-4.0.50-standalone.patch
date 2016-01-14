@@ -1,0 +1,67 @@
+diff --git a/lib/phusion_passenger/standalone/command.rb b/lib/phusion_passenger/standalone/command.rb
+index e9079f1..a51b380 100644
+--- a/lib/phusion_passenger/standalone/command.rb
++++ b/lib/phusion_passenger/standalone/command.rb
+@@ -61,6 +61,7 @@ private
+ 	def require_daemon_controller
+ 		if !defined?(DaemonController)
+ 			begin
++				$LOAD_PATH.unshift "/opt/rh/rh-passenger40/root/usr/share/gems/gems/daemon_controller-1.2.0/lib/"
+ 				require 'daemon_controller'
+ 				begin
+ 					require 'daemon_controller/version'
+diff --git a/lib/phusion_passenger/standalone/runtime_locator.rb b/lib/phusion_passenger/standalone/runtime_locator.rb
+index 418ab6f..d674441 100644
+--- a/lib/phusion_passenger/standalone/runtime_locator.rb
++++ b/lib/phusion_passenger/standalone/runtime_locator.rb
+@@ -84,7 +84,7 @@ class RuntimeLocator
+ 		if result = config["nginx_binary"]
+ 			@nginx_binary = result
+ 		elsif PhusionPassenger.natively_packaged? && @nginx_version == PhusionPassenger::PREFERRED_NGINX_VERSION
+-			@nginx_binary = "#{PhusionPassenger.lib_dir}/PassengerWebHelper"
++			@nginx_binary = "#{PhusionPassenger.agents_dir}/PassengerWebHelper"
+ 		else
+ 			filename = "#{@runtime_dir}/#{version}/webhelper-#{@nginx_version}-#{cxx_compat_id}/PassengerWebHelper"
+ 			if File.exist?(filename)
+@@ -98,7 +98,7 @@ class RuntimeLocator
+ 	end
+ 
+ 	def find_agents_dir
+-		return "#{find_support_dir}/agents"
++		return PhusionPassenger.agents_dir
+ 	end
+ 
+ 	def find_lib_dir
+diff --git a/lib/phusion_passenger/utils/file_system_watcher.rb b/lib/phusion_passenger/utils/file_system_watcher.rb
+index a4a6b50..878acf9 100644
+--- a/lib/phusion_passenger/utils/file_system_watcher.rb
++++ b/lib/phusion_passenger/utils/file_system_watcher.rb
+@@ -21,7 +21,7 @@
+ #  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ #  THE SOFTWARE.
+ 
+-PhusionPassenger.require_passenger_lib 'native_support'
++#PhusionPassenger.require_passenger_lib 'native_support'
+ 
+ module PhusionPassenger
+ module Utils
+diff --git a/resources/templates/standalone/config.erb b/resources/templates/standalone/config.erb
+index e80297e..37e91a1 100644
+--- a/resources/templates/standalone/config.erb
++++ b/resources/templates/standalone/config.erb
+@@ -41,7 +41,15 @@ events {
+ http {
+     log_format debug '[$time_local] $msec  "$request" $status conn=$connection sent=$bytes_sent body_sent=$body_bytes_sent';
+     include '<%= PhusionPassenger.resources_dir %>/mime.types';
++<% if PlatformInfo.ruby_command == "/opt/rh/rh-ruby22/root/usr/bin/ruby" %>
++    passenger_ruby "/opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby22";
++<% elsif PlatformInfo.ruby_command == "/opt/rh/ruby200/root/usr/bin/ruby" %>
++    passenger_ruby "/opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby200";
++<% elsif PlatformInfo.ruby_command == "/opt/rh/ruby193/root/usr/bin/ruby" %>
++    passenger_ruby "/opt/rh/rh-passenger40/root/usr/libexec/passenger-ruby193";
++<% else %>
+     passenger_ruby <%= PlatformInfo.ruby_command %>;
++<% end %>
+     passenger_root '<%= location_config_filename %>';
+     passenger_abort_on_startup_error on;
+     passenger_ctl cleanup_pidfiles <%= serialize_strset("#{@temp_dir}/temp_dir_toucher.pid") %>;

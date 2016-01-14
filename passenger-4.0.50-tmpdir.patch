@@ -1,0 +1,39 @@
+diff --git a/ext/common/Utils.cpp b/ext/common/Utils.cpp
+index fd2e8f3..30dbdd4 100644
+--- a/ext/common/Utils.cpp
++++ b/ext/common/Utils.cpp
+@@ -629,7 +629,7 @@ getSystemTempDir() {
+ 	if (temp_dir == NULL || *temp_dir == '\0') {
+ 		temp_dir = getenv("PASSENGER_TMPDIR");
+ 		if (temp_dir == NULL || *temp_dir == '\0') {
+-			temp_dir = "/tmp";
++			temp_dir = "/var/run/rh-passenger40";
+ 		}
+ 	}
+ 	return temp_dir;
+diff --git a/lib/phusion_passenger/admin_tools.rb b/lib/phusion_passenger/admin_tools.rb
+index f149241..92cceea 100644
+--- a/lib/phusion_passenger/admin_tools.rb
++++ b/lib/phusion_passenger/admin_tools.rb
+@@ -30,7 +30,7 @@ module AdminTools
+ 				return ENV[name]
+ 			end
+ 		end
+-		return "/tmp"
++		return "/var/run/rh-passenger40"
+ 	end
+ 	
+ 	def self.process_is_alive?(pid)
+diff --git a/lib/phusion_passenger/utils/tmpdir.rb b/lib/phusion_passenger/utils/tmpdir.rb
+index c3c8ab6..e77148a 100644
+--- a/lib/phusion_passenger/utils/tmpdir.rb
++++ b/lib/phusion_passenger/utils/tmpdir.rb
+@@ -37,7 +37,7 @@ protected
+ 	def self.passenger_tmpdir(create = true)
+ 		dir = @@passenger_tmpdir
+ 		if dir.nil? || dir.empty?
+-			tmpdir = "/tmp"
++			tmpdir = "/var/run/rh-passenger40"
+ 			["PASSENGER_TEMP_DIR", "PASSENGER_TMPDIR"].each do |name|
+ 				if ENV.has_key?(name) && !ENV[name].empty?
+ 					tmpdir = ENV[name]
